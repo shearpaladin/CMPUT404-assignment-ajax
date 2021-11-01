@@ -71,10 +71,11 @@ def flask_post_json():
     else:
         return json.loads(request.form.keys()[0])
 
+#https://stackoverflow.com/questions/14343812/redirecting-to-url-in-flask
 @app.route("/")
 def hello():
     '''Return something coherent here.. perhaps redirect to /static/index.html '''
-    return redirect("/static/index.html")
+    return redirect("/static/index.html", code=302)
 
 @app.route("/entity/<entity>", methods=['POST','PUT'])
 def update(entity):
