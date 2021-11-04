@@ -22,7 +22,7 @@
 
 
 import flask
-from flask import Flask, request, redirect
+from flask import Flask, request, redirect, jsonify
 import json
 app = Flask(__name__)
 app.debug = True
@@ -71,16 +71,21 @@ def flask_post_json():
     else:
         return json.loads(request.form.keys()[0])
 
-#https://stackoverflow.com/questions/14343812/redirecting-to-url-in-flask
+# https://stackoverflow.com/questions/14343812/redirecting-to-url-in-flask
 @app.route("/")
 def hello():
     '''Return something coherent here.. perhaps redirect to /static/index.html '''
     return redirect("/static/index.html", code=302)
 
+# https://stackoverflow.com/questions/45412228/sending-json-and-status-code-with-a-flask-response
+# jsonify returns status code 200 by default
 @app.route("/entity/<entity>", methods=['POST','PUT'])
 def update(entity):
     '''update the entities via this interface'''
-    return None
+    data = flask_post_json()
+    myWorld.set(entity, data)
+    # data = json/dumps(myWorld.get(entity))
+    return flask.jsonify(myWorld.get(entity))
 
 @app.route("/world", methods=['POST','GET'])    
 def world():
