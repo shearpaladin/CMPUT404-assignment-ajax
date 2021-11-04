@@ -22,7 +22,7 @@
 
 
 import flask
-from flask import Flask, request, redirect, jsonify
+from flask import Flask, request, redirect
 import json
 app = Flask(__name__)
 app.debug = True
@@ -77,30 +77,31 @@ def hello():
     '''Return something coherent here.. perhaps redirect to /static/index.html '''
     return redirect("/static/index.html", code=302)
 
-# https://stackoverflow.com/questions/45412228/sending-json-and-status-code-with-a-flask-response
-# jsonify returns status code 200 by default
 @app.route("/entity/<entity>", methods=['POST','PUT'])
 def update(entity):
     '''update the entities via this interface'''
     data = flask_post_json()
     myWorld.set(entity, data)
-    # data = json/dumps(myWorld.get(entity))
-    return flask.jsonify(myWorld.get(entity))
+    return json.dumps(myWorld.get(entity))
 
 @app.route("/world", methods=['POST','GET'])    
 def world():
     '''you should probably return the world here'''
-    return None
+    world = myWorld.world()
+    return json.dumps(world)
 
 @app.route("/entity/<entity>")    
 def get_entity(entity):
     '''This is the GET version of the entity interface, return a representation of the entity'''
-    return None
+    data = myWorld.get(entity)
+    return json.dumps(data)
 
 @app.route("/clear", methods=['POST','GET'])
 def clear():
     '''Clear the world out!'''
-    return None
+    myWorld.clear()
+    newWorld = myWorld.world()
+    return json.dumps(newWorld)
 
 if __name__ == "__main__":
     app.run()
