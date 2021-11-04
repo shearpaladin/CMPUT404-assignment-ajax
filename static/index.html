@@ -39,7 +39,12 @@ function sendJSONXMLHTTPRequest(url, objects, callback) {
             try {
                 if (xhr.status==200) {
                     //XXX: parse some JSON from the request!
+                    // https://www.w3schools.com/js/js_json_parse.asp
+                    var data = JSON.parse(xhr.responseText);
                     //XXX: Pass the data to the callback!
+                    console.log(" WHAT IS THIS CALLBACK?? HEREEEEEEEE!")
+                    console.log(callback(data))
+                    callback(data);
                 }
             } 
             catch(e) {
@@ -48,8 +53,16 @@ function sendJSONXMLHTTPRequest(url, objects, callback) {
         }
     };
     //XXX: POST to a URL
+    // https://stackoverflow.com/questions/24468459/sending-a-json-to-server-and-retrieving-a-json-in-return-without-jquery
+    xhr.open("POST", url, true);
     //XXX: set the mimetype and the accept headers!
     // Remember to use application/json !
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.setRequestHeader("Accept", "application/json");
+
+    // for POST update(): Send POST request entity/<objects>
+    xhr.send(JSON.stringify(objects));
+
 }
 
 
@@ -59,14 +72,17 @@ world = {};
 function drawCircle(context,entity) {
     with(context) {
         beginPath();              
-        lineWidth = 3;
+        //lineWidth = 3;
+        lineWidth = 1;
         var x = entity["x"];
         var y = entity["y"];
         //moveTo(x,y);
         fillStyle = entity["colour"];
         strokeStyle = fillStyle;
-        arc(x, y, (entity["radius"])?entity["radius"]:50, 0, 2.0 * Math.PI, false);  
-        stroke();                                
+        //arc(x, y, (entity["radius"])?entity["radius"]:50, 0, 2.0 * Math.PI, false); 
+        arc(x, y, (entity["radius"])?entity["radius"]:10, 0, 2.0 * Math.PI, false);
+        fill()   
+        //stroke();                                
     }
 }
 
