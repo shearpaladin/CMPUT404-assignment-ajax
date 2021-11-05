@@ -70,19 +70,21 @@ world = {};
 
 //XXX: TODO Make this prettier!
 function drawCircle(context,entity) {
-    with(context) {
-        beginPath();              
+    with(context) {             
         //lineWidth = 3;
-        lineWidth = 1;
+        //lineWidth = 1;
+        
+        var radius = 5 + Math.floor((Math.random()*8)+1)
+        
+        beginPath(); 
         var x = entity["x"];
         var y = entity["y"];
-        //moveTo(x,y);
+
         fillStyle = entity["colour"];
         strokeStyle = fillStyle;
         //arc(x, y, (entity["radius"])?entity["radius"]:50, 0, 2.0 * Math.PI, false); 
-        arc(x, y, (entity["radius"])?entity["radius"]:10, 0, 2.0 * Math.PI, false);
-        fill()   
-        //stroke();                                
+        arc(x, y, radius, 0, 2.0 * Math.PI, false);
+        fill();                              
     }
 }
 
@@ -277,8 +279,7 @@ mouse.mouseuppers.push(function(x,y,clicked,e) {
 });
 
 mouse.mousedraggers.push(function(x,y,clicked,e) {
-    addEntityWithoutName({'x':x,'y':y,'colour':'yellow',
-                          'radius':10});
+    addEntityWithoutName({'x':x,'y':y,'colour':'yellow', 'radius':10});
 });
 
 
