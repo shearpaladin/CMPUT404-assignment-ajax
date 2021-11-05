@@ -42,8 +42,8 @@ function sendJSONXMLHTTPRequest(url, objects, callback) {
                     // https://www.w3schools.com/js/js_json_parse.asp
                     var data = JSON.parse(xhr.responseText);
                     //XXX: Pass the data to the callback!
-                    console.log(" WHAT IS THIS CALLBACK?? HEREEEEEEEE!")
-                    console.log(callback(data))
+                    //console.log(" WHAT IS THIS CALLBACK?? HEREEEEEEEE!")
+                    //console.log(callback(data))
                     callback(data);
                 }
             } 
@@ -152,8 +152,13 @@ function getPosition(e) {
 
 function addEntity(entity, data) {
     world[entity] = data;
-    drawNextFrame(); // (but should we?)
+    //drawNextFrame(); // (but should we?) A:No!
+    url = "/entity/" + entity
     //XXX: Send a XHTML Request that updates the entity you just  modified!
+    // send data of url first and world data then set drawNextFrame to true
+    sendJSONXMLHTTPRequest(url, data, function(body){
+        drawNextFrame();
+    }); //set drawNextFrame = true
 
 }
 
@@ -262,23 +267,29 @@ mouse = (function() {
 
 // Add the application specific mouse listeners!
 //XXX: TODO Make these prettier!
+// my colours are ugly but i'll make this ebtter
 mouse.mousedowners.push(function(x,y,clicked,e) {
-    addEntityWithoutName({'x':x,'y':y,'colour':'blue'});
+    addEntityWithoutName({'x':x,'y':y,'colour':'white'});
 });
 
 mouse.mouseuppers.push(function(x,y,clicked,e) {
-    addEntityWithoutName({'x':x,'y':y,'colour':'red'});
+    addEntityWithoutName({'x':x,'y':y,'colour':'white'});
 });
 
 mouse.mousedraggers.push(function(x,y,clicked,e) {
-    addEntityWithoutName({'x':x,'y':y,'colour':'green',
+    addEntityWithoutName({'x':x,'y':y,'colour':'yellow',
                           'radius':10});
 });
 
 
 function update() {
     //XXX: TODO Get the world from the webservice using a XMLHTTPRequest
-    drawFrame();
+    sendJSONXMLHTTPRequest("/world", null, function(data){
+        world = data // save GET request as data of current world
+        drawNextFrame(); // set drawNextFrame to true
+        drawFrame(); // draw frame 
+    })
+    
 }
 
 // 30 frames per second
